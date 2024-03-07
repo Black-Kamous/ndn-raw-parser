@@ -4,30 +4,6 @@
 #include <iomanip>
 #include <queue>
 
-// template <typename T, int maxlen>
-// class primal_queue
-// {
-// public:
-//     primal_queue(){}
-//     void push(T obj)
-//     {
-//         buf[rear] = obj;
-//     }
-//     void pop()
-//     {
-//         if(front < rear)
-//             ptr_move(front, 1);
-//     }
-// private:
-//     T* buf[maxlen];
-//     int front = 0;
-//     int rear = 0;
-//     void ptr_move(int& ptr, int len)
-//     {
-//         ptr = (ptr+len);
-//     }
-// };
-
 
 namespace ndn{
 
@@ -44,7 +20,7 @@ public:
      * 将buf，即wire format添加到第一个队列中
     */
     void
-    addBuf(ConstBufferPtr buf)
+    addBuf(ConstBufferPtr&& buf)
     {
         m_unrecog.push(std::move(buf));
     }
@@ -194,7 +170,7 @@ int main(int argc, char** args)
             be.encode();
             //be.showEncode();
 
-            bp.addBuf(be.getEncoded().getBuffer());
+            bp.addBuf(std::move(be.getEncoded().getBuffer()));
             bp.decode();
             //bp.showRecognized();
             bp.parse();
