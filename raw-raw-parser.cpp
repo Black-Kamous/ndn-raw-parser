@@ -4,6 +4,31 @@
 #include <iomanip>
 #include <queue>
 
+// template <typename T, int maxlen>
+// class primal_queue
+// {
+// public:
+//     primal_queue(){}
+//     void push(T obj)
+//     {
+//         buf[rear] = obj;
+//     }
+//     void pop()
+//     {
+//         if(front < rear)
+//             ptr_move(front, 1);
+//     }
+// private:
+//     T* buf[maxlen];
+//     int front = 0;
+//     int rear = 0;
+//     void ptr_move(int& ptr, int len)
+//     {
+//         ptr = (ptr+len);
+//     }
+// };
+
+
 namespace ndn{
 
 using BlockContainer = std::queue<Block>;
@@ -56,7 +81,7 @@ public:
         m_unparsed.front().parse();
         // auto ptr = m_unparsed.front().elements_begin();
         // ptr->parse();
-        m_parsed.push(m_unparsed.front());
+        m_parsed.push(std::move(m_unparsed.front()));
         m_unparsed.pop();
     }
 
@@ -80,14 +105,14 @@ public:
         interest.setMustBeFresh(true);
         interest.setInterestLifetime(6_s);
 
-        m_interest.push(interest);
+        m_interest.push(std::move(interest));
     }
 
     void
     encode()
     {
         const Block& b = m_interest.front().wireEncode();
-        m_block.push(b);
+        m_block.push(std::move(b));
         m_interest.pop();
 
     }
